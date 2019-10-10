@@ -42,7 +42,7 @@ The following attributes affect the behavior of the chef-client program when run
 - `node['chef_client']['log_dir']` - Sets directory used to store chef-client logs. Default "/var/log/chef".
 - `node['chef_client']['log_rotation']['options']` - Set options to logrotation of chef-client log file. Default `['compress']`.
 - `node['chef_client']['log_rotation']['prerotate']` - Set prerotate action for chef-client logrotation. Default to `nil`.
-- `node['chef_client']['log_rotation']['postrotate']` - Set postrotate action for chef-client logrotation. Default to chef-client service reload depending on init system.
+- `node['chef_client']['log_rotation']['postrotate']` - Set postrotate action for chef-client logrotation. Default to chef-client service reload depending on init system. It should be empty to skip reloading chef-client service in case if `node['chef_client']['systemd']['timer']` is true.
 - `node['chef_client']['conf_dir']` - Sets directory used via command-line option to a location where chef-client search for the client config file . Default "/etc/chef".
 - `node['chef_client']['bin']` - Sets the full path to the `chef-client` binary. Mainly used to set a specific path if multiple versions of chef-client exist on a system or the bin has been installed in a non-sane path. Default "/usr/bin/chef-client".
 - `node['chef_client']['ca_cert_path']` - Sets the full path to the PEM-encoded certificate trust store used by `chef-client` when daemonized. If not set, [default values](https://docs.chef.io/chef_client_security.html#ssl-cert-file) are used.
@@ -60,6 +60,7 @@ The following attributes affect the behavior of the chef-client program when run
 - `node['chef_client']['systemd']['timer']` - If true, uses systemd timer to run chef frequently instead of chef-client daemon mode (defaults to false). This only works on platforms where systemd is installed and used.
 - `node['chef_client']['systemd']['timeout']` - If configured, sets the systemd timeout. This might be useful to avoid stalled chef runs in the systemd timer setup.
 - `node['chef_client']['systemd']['restart']` - The string to use for systemd `Restart=` value when not running as a timer. Defaults to `always`. Other possible options: `no, on-success, on-failure, on-abnormal, on-watchdog, on-abort`.
+- `node['chef_client']['systemd']['killmode']` - If configured, the string to use for the systemd `KillMode=` value. This determines how PIDs spawned by the chef-client process are handled when chef-client PID stops. Options: `control-group, process, mixed, none`. Systemd defaults to `control-group` when this is not specified. More information can be found on the [systemd.kill man page](https://www.freedesktop.org/software/systemd/man/systemd.kill.html).
 - `node['chef_client']['task']['frequency']` - Frequency with which to run the `chef-client` scheduled task (e.g., `'hourly'`, `'daily'`, etc.) Default is `'minute'`.
 - `node['chef_client']['task']['frequency_modifier']` - Numeric value to go with the scheduled task frequency. Default is `node['chef_client']['interval'].to_i / 60`
 - `node['chef_client']['task']['start_time']` - The start time for the task in `HH:mm` format (ex: 14:00). If the `frequency` is `minute` default start time will be `Time.now` plus the `frequency_modifier` number of minutes.
@@ -92,6 +93,7 @@ This cookbook makes use of attribute-driven configuration with this attribute. S
 
 [For the most current information about Chef Client configuration, read the documentation.](https://docs.chef.io/config_rb_client.html).
 
+- `node['chef_client']['chef_license']` - Set to 'accept' or 'accept-no-persist' to accept the [license](https://docs.chef.io/chef_license.html) before upgrading to Chef 15.
 - `node['chef_client']['config']['chef_server_url']` - The URL for the Chef server.
 - `node['chef_client']['config']['validation_client_name']` - The name of the chef-validator key that is used by the chef-client to access the Chef server during the initial chef-client run.
 - `node['chef_client']['config']['verbose_logging']` - Set the log level. Options: true, nil, and false. When this is set to false, notifications about individual resources being processed are suppressed (and are output at the :info logging level). Setting this to false can be useful when a chef-client is run as a daemon. Default value: nil.
@@ -146,6 +148,8 @@ Use this recipe to run chef-client on Windows nodes as a scheduled task. Without
 Use the recipes as described above to configure your systems to run Chef as a service via cron / scheduled task or one of the service management systems supported by the recipes.
 
 The `chef-client::config` recipe is only _required_ with init style `init` (default setting for the attribute on debian/redhat family platforms, because the init script doesn't include the `pid_file` option which is set in the config.
+
+If you wish to accept the [Chef license](https://docs.chef.io/chef_license.html) before upgrading to Chef 15 you must use the `chef-client::config` recipe or set the `chef_license` value in your config manually. See [Accepting the Chef license](https://docs.chef.io/chef_license_accept.html) for more details or other ways to accept the license.
 
 The config recipe is used to dynamically generate the `/etc/chef/client.rb` config file. The template walks all attributes in `node['chef_client']['config']` and writes them out as key:value pairs. The key should be the configuration directive. For example, the following attributes (in a role):
 

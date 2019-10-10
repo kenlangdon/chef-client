@@ -2,6 +2,35 @@
 
 This file is used to list changes made in each version of the chef-client cookbook.
 
+## 11.3.4 (2019-10-01)
+
+- Add ignore_failure to the windows_service stop - [@tas50](https://github.com/tas50)
+
+## 11.3.3 (2019-10-01)
+
+- Stop chef-client windows service after creating scheduled task - [@jasonwbarnett](https://github.com/jasonwbarnett)
+- Allow changing nice path - [@scalp42](https://github.com/scalp42)
+- Do not restart try to restart the timer when switching to service mode - [@Annih](https://github.com/Annih)
+- Restart chef-client service after only when timer is setup - [@Annih](https://github.com/Annih)
+
+## 11.3.2 (2019-10-01)
+
+- Remove long_description and recipe metadata from metadata.rb - [@tas50](https://github.com/tas50)
+- Fix chef-client.service reload - [@dheerajd-msys](https://github.com/dheerajd-msys)
+
+## 11.3.1 (2019-09-17)
+
+- MSYS-1092 Fix for nil class error if chef client handlers are not defined. - [@Vasu1105](https://github.com/Vasu1105)
+- Removed unwanted condition - [@Vasu1105](https://github.com/Vasu1105)
+- Fix for nil class error if chef client handlers are not defined. (#635) - [@lamont-granquist](https://github.com/lamont-granquist)
+
+## 11.3.0 (2019-08-19)
+- Added KillMode option for systemd - [@kimbernator](https://github.com/kimbernator)
+
+## 11.2.0 (2019-04-30)
+
+- Added the ability to accept upcoming Chef 15+ license via attribute - [@tyler-ball](https://github.com/tyler-ball)
+
 ## 11.1.3 (2019-04-08)
 
 - Replace :reload with :restart - [@americanhanko](https://github.com/americanhanko)
