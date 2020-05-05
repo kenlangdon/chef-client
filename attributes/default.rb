@@ -31,13 +31,13 @@ default['chef_client']['config'] = {
 }
 
 # Accept the chef license when running the chef service
-default['chef_client']['chef_license'] = nil
+default['chef_client']['chef_license'] = 'accept'
 
 # should the client fork on runs
 default['chef_client']['config']['client_fork'] = true
 
 default['chef_client']['log_file']    = 'client.log'
-default['chef_client']['interval']    = '200'
+default['chef_client']['interval']    = '600'
 default['chef_client']['splay']       = '30'
 default['chef_client']['conf_dir']    = '/etc/chef'
 default['chef_client']['bin']         = '/usr/bin/chef-client'
